@@ -23,8 +23,8 @@ const initializePage = async () => {
     catImg.style.justifyContent = 'center';
     catImg.style.height = '50%';
     catImg.style.width = '70%';
-   
-    
+
+
 
     imgContainer.appendChild(catImg)
     document.body.appendChild(imgContainer)
@@ -41,7 +41,17 @@ const fetchCatImg = async () => {
     return imgURL
 }
 
+// #1.
+
 window.onload = async () => {
     initializePage(),
     fetchCatImg()
-}
+};
+
+
+/*
+1. start with - window.onload async func where you initializePage
+2. then - const initializePage = async () => { where you write your code}
+3. fetch info like url - outside async func, and pull return in the async func
+
+*/
