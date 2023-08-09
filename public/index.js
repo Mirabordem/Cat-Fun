@@ -1,4 +1,22 @@
 const initializePage = async () => {
+// func calej strony
+// create main container, position it & append to body
+// invoke all helper funcs
+// add local storage
+
+const container = document.createElement("section");
+container.setAttribute("class", "container");
+container.style.display = "flex";
+container.style.flexDirection = "column";
+container.style.alignItems = "center";
+container.style.marginTop = "20px";
+
+document.body.appendChild(container)
+
+
+
+
+}
     //title
     const headerTitle = document.createElement('h2');
     headerTitle.setAttribute('id','cat--tittle');
@@ -16,8 +34,6 @@ const initializePage = async () => {
 
     imgContainer.style.display = 'flex';
     imgContainer.style.justifyContent = 'center';
-    // imgContainer.style.height = '400px'
-    // imgContainer.style.width = '550px'
 
     catImg.style.display = 'flex';
     catImg.style.justifyContent = 'center';
@@ -31,7 +47,7 @@ const initializePage = async () => {
 
     const imgURl = await fetchCatImg()
     catImg.src = imgURl;
-}
+
 
 const fetchCatImg = async () => {
     const res = await fetch('https://api.thecatapi.com/v1/images/search');
