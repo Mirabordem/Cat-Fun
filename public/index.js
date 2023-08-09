@@ -93,7 +93,57 @@ const createScoreContainer = () => {
     const container = document.querySelector(".container");
     container.appendChild(scoreContainer);
 }
+const createCommentContainer = () => {
+    // Create form
+    const commentForm = document.createElement("form");
+    commentForm.className = "comment-form";
+    commentForm.style.margin = "20px";
+    commentForm.style.display = "flex";
+    commentForm.style.width = "100%";
+    commentForm.style.justifyContent = "center";
+    commentForm.style.alignItems = "center";
 
+    // Create comment input
+    const userCommentContainer = document.createElement("div");
+    userCommentContainer.className = "user-comment-container";
+    userCommentContainer.style.marginRight = "10px";
+
+    const label = document.createElement("label");
+    label.setAttribute("for", "user-comment");
+    label.innerText = "Comment: ";
+
+    const commentInput = document.createElement("input");
+    commentInput.id = "user-comment";
+    commentInput.name = "user-comment";
+    commentInput.placeholder = "Add a comment... ";
+    commentInput.required = true;
+
+    userCommentContainer.appendChild(label);
+    userCommentContainer.appendChild(commentInput);
+
+    // Create submit button
+    const submitBtn = document.createElement("input");
+    submitBtn.id = "submit-comment"
+    submitBtn.type = "submit";
+    submitBtn.value = "Submit";
+
+    commentForm.appendChild(userCommentContainer);
+    commentForm.appendChild(submitBtn);
+
+    // Create comments section
+    const comments = document.createElement("div");
+    comments.className = "comments";
+    comments.style.border = "solid grey 1px";
+    comments.style.height = "400px";
+    comments.style.width = "80%";
+    comments.style.margin = "10px";
+    comments.style.padding = "5px";
+    comments.style.overflow = "scroll";
+
+    const container = document.querySelector(".container");
+    container.appendChild(commentForm);
+    container.appendChild(comments);
+}
 
 
 
