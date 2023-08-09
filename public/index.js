@@ -25,53 +25,95 @@ const mainContent = () => {
 
 const container = document.querySelector(".container")
 
-  //h1
+  //Create h1
   const h1 = document.createElement('h1');
   h1.setAttribute('id','h1');
   h1.innerText = 'Catstagram';
   container.appendChild(h1)
 
-  headerTitle.style.display = 'flex';
-  headerTitle.style.justifyContent = 'center';
-
-  //Img
-  const imgContainer = document.createElement('div');
-  imgContainer.setAttribute('id','img--container');
-  const catImg = document.createElement('img');
-  catImg.setAttribute('id', 'cat--img');
-
-  imgContainer.style.display = 'flex';
-  imgContainer.style.justifyContent = 'center';
-
-  catImg.style.display = 'flex';
-  catImg.style.justifyContent = 'center';
-  catImg.style.height = '50%';
-  catImg.style.width = '70%';
+  // Create new pic button
+  const newPicButton = document.createElement("button");
+  newPicButton.id = "new-pic";
+  newPicButton.innerText = "Get New Cat";
+  container.appendChild(newPicButton);
 
 
+  //Create img
+  const img = document.createElement("img");
+  img.style.margin = "30px";
+  img.style.maxWidth = "800px"
+  container.appendChild(img);
+  fetchImg();
+//   img.src = imgUrl;
 
-  imgContainer.appendChild(catImg)
-  document.body.appendChild(imgContainer)
+};
 
-  const imgURl = await fetchCatImg()
-  catImg.src = imgURl;
+// Create voting buttons and Picture Score
+const createScoreContainer = () => {
+    // Create score container
+    const scoreContainer = document.createElement("div");
+    scoreContainer.className = "score-container";
+    scoreContainer.style.display = "flex";
+    scoreContainer.style.flexDirection = "column";
+    scoreContainer.style.alignItems = "center";
 
+    // Create score display
+    const scoreDisplay = document.createElement("div");
+    scoreDisplay.className = "score-display";
+    scoreDisplay.style.marginBottom = "10px";
 
+    const scoreTitle = document.createElement("span");
+    scoreTitle.innerText = "Popularity Score: ";
+
+    const score = document.createElement("span");
+    score.className = "score";
+    score.innerText = "0";
+
+    scoreDisplay.appendChild(scoreTitle);
+    scoreDisplay.appendChild(score);
+
+    // Create upvote/downvote buttons
+    const buttonContainer = document.createElement("div");
+
+    const upvoteBtn = document.createElement("button");
+    upvoteBtn.id = "upvote";
+    upvoteBtn.innerText = "Upvote";
+
+    const downvoteBtn = document.createElement("button");
+    downvoteBtn.id = "downvote";
+    downvoteBtn.innerText = "Downvote";
+    downvoteBtn.style.marginLeft = "5px";
+
+    buttonContainer.appendChild(upvoteBtn);
+    buttonContainer.appendChild(downvoteBtn);
+
+    scoreContainer.appendChild(scoreDisplay);
+    scoreContainer.appendChild(buttonContainer);
+
+    const container = document.querySelector(".container");
+    container.appendChild(scoreContainer);
 }
 
 
 
-const fetchCatImg = async () => {
-    const res = await fetch('https://api.thecatapi.com/v1/images/search');
+
+// Fetch image from API and set img url
+const fetchImg = async () => {
+
+try {
+    const res = await fetch("https://api.thecatapi.com/v1/images/search?size=small");
     const data = await res.json();
-    // console.log(data)
-    const imgURL = data[0].url
-    return imgURL
+    document.querySelector("img").src = data[0].url;
+} catch (e) {
+    console.log("Failed to fetch cat image", e);
+}
 }
 
 
 
 window.onload = async () => {
-    initializePage(),
-    fetchCatImg()
+    initializePage();
+
+    document.getElementById("new-pic").addEventListener("click", fetchImg);
+
 };
