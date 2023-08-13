@@ -1,40 +1,42 @@
 const initializePage = () => {
-    // This is the main body of the page
-    // Create main container
-    // Position it on the page
-    // Append to body
 
-    document.body.style.background = "#efdcdc"
+    //  1. Main function to create the whole page body, establishing the flow...
 
+
+    // A. Create container of the body - position it on the page, and style.
     const container = document.createElement("section");
     container.className = "container";
     container.style.display = "flex";
     container.style.flexDirection = "column";
     container.style.alignItems = "center";
     container.style.marginTop = "30px";
-    // container.style.background = "#efdcdc";
+    container.style.background = "#efdcdc";
+
+      // append to body
     document.body.appendChild(container);
 
-    // Activate all helper functions
 
+    // B. Activate all helper functions
     createMainContent();
     createScoreContainer();
     createCommentContainer();
 
 
+    // C. Create local storage
+    if (localStorage.url) {
+        document.querySelector("img").src = localStorage.url;
+        document.querySelector(".score").innerHTML = localStorage.score;
+        renderComments(JSON.parse(localStorage.comments));
+    } else {
+        fetchImage();
+    }
+};
 
-    // if (localStorage.url) {
-    //     document.querySelector("img").src = localStorage.url;
-    //     document.querySelector('.score').innerHTML = localStorage.score;
-    //     renderComments(JSON.parse(localStorage.comments));
-    // } else {
-    //     fetchImage();
-    // }
-}
 
-// First, create all the containers and elements
-// Position them and style
+// CONTAINERS AND ELEMENTS (creating, positioning and styling)
 
+
+// 2. Function to create the main content of the page:
 const createMainContent = () => {
     // Create h1
     const h1 = document.createElement("h1");
@@ -61,7 +63,6 @@ const createMainContent = () => {
     newPicButton.style.justifyContent = "center";
     newPicButton.style.alignItems = "center";
 
-
     // Create cat img
     const img = document.createElement("img");
     img.style.margin = "20px";
@@ -75,15 +76,19 @@ const createMainContent = () => {
     container.appendChild(img);
 }
 
+
+
+
+// 3. Function to create the score container.
 const createScoreContainer = () => {
-    // Create score container
+    // score container
     const scoreContainer = document.createElement("div");
     scoreContainer.className = "score-container";
     scoreContainer.style.display = "flex";
     scoreContainer.style.flexDirection = "column";
     scoreContainer.style.alignItems = "center";
 
-    // Create score display
+    // score display
     const scoreDisplay = document.createElement("div");
     scoreDisplay.className = "score-display";
     scoreDisplay.style.marginBottom = "10px";
@@ -105,7 +110,7 @@ const createScoreContainer = () => {
     scoreDisplay.appendChild(scoreTitle);
     scoreDisplay.appendChild(score);
 
-    // Create upvote/downvote buttons
+    // upvote/downvote buttons:
     const buttonContainer = document.createElement("div");
 
     const upvoteBtn = document.createElement("button");
@@ -135,8 +140,11 @@ const createScoreContainer = () => {
     container.appendChild(scoreContainer);
 }
 
+
+  // 4. Function to create comments container:
 const createCommentContainer = () => {
-    // Create form
+
+    //  form
     const commentForm = document.createElement("form");
     commentForm.className = "comment-form";
     commentForm.style.margin = "30px";
@@ -146,7 +154,7 @@ const createCommentContainer = () => {
     commentForm.style.alignItems = "center";
 
 
-    // Create comment input
+    // comment input
     const userCommentContainer = document.createElement("div");
     userCommentContainer.className = "user-comment-container";
     userCommentContainer.style.marginRight = "10px";
@@ -165,15 +173,17 @@ const createCommentContainer = () => {
     commentInput.placeholder = "Add a comment... ";
     commentInput.style.color = "navy";
     commentInput.style.fontSize = "18px";
+    commentInput.style.outline = "none"; // no border when you type
     commentInput.required = true;
     commentInput.style.border = "none";
     commentInput.style.padding = "10px 30px";
     commentInput.style.marginLeft = "5px";
 
+
     userCommentContainer.appendChild(label);
     userCommentContainer.appendChild(commentInput);
 
-    // Create submit button
+    // submit button
     const submitBtn = document.createElement("input");
     submitBtn.id = "submit-comment"
     submitBtn.type = "submit";
@@ -187,14 +197,12 @@ const createCommentContainer = () => {
     submitBtn.style.paddingBottom = "10px";
     submitBtn.style.boxShadow = "2px 2px 4px grey";
 
-
     commentForm.appendChild(userCommentContainer);
     commentForm.appendChild(submitBtn);
 
-    // Create comments section
+    // comments section
     const comments = document.createElement("div");
     comments.className = "comments";
-    // comments.style.border = "solid grey 1px";
     comments.style.height = "400px";
     comments.style.width = "80%";
     comments.style.margin = "10px";
@@ -208,17 +216,19 @@ const createCommentContainer = () => {
     container.appendChild(comments);
 }
 
-// Create all the actions for containers
 
-// get pictures from API and get img url
+
+//   PAGE ACTIONS SECTION:
+
+// 1. async function to fetch pictures from API and get img url:
 const fetchImage = async () => {
     try {
         const res = await fetch("https://api.thecatapi.com/v1/images/search?size=small");
         const data = await res.json();
 
-        // localStorage.setItem("url", data[0].url);
-        // localStorage.setItem("score", 0);
-        // localStorage.setItem("comments", JSON.stringify([]));
+        localStorage.setItem("url", data[0].url);
+        localStorage.setItem("score", 0);
+        localStorage.setItem("comments", JSON.stringify([]));
 
         document.querySelector("img").src = data[0].url;
         document.querySelector('.score').innerHTML = 0;
@@ -228,33 +238,7 @@ const fetchImage = async () => {
     }
 }
 
-const vote = e => {
-    if (e.target.id === "upvote") {
-        localStorage.score = parseInt(localStorage.score) + 1;
-    } else {
-        localStorage.score = parseInt(localStorage.score) - 1;
-    }
-    document.querySelector('.score').innerHTML = localStorage.score;
-}
-
-const submitComment = e => {
-    e.preventDefault();
-    const commentForm = document.querySelector('.comment-form');
-    const formData = new FormData(commentForm);
-
-    const commentText = formData.get("user-comment");
-    commentForm.reset();
-
-    const storedComments = JSON.parse(localStorage.comments);
-    storedComments.push(commentText);
-    localStorage.comments = JSON.stringify(storedComments);
-
-    const comment = createComment(commentText, storedComments.length - 1);
-
-    const comments = document.querySelector(".comments");
-    comments.appendChild(comment);
-}
-
+// 2. function to create comment:
 const createComment = (comment, i) => {
     const newCommentContainer = document.createElement('div');
     newCommentContainer.style.display = "flex";
@@ -278,6 +262,8 @@ const createComment = (comment, i) => {
     return newCommentContainer;
 }
 
+
+// 3. function to render comments:
 const renderComments = comments => {
     const commentsContainer = document.querySelector(".comments");
     commentsContainer.innerHTML = "";
@@ -286,6 +272,8 @@ const renderComments = comments => {
     });
 }
 
+
+// 4. function to delete comments
 const deleteComment = e => {
     console.log(e.target);
     const storedComments = JSON.parse(localStorage.comments);
@@ -295,11 +283,45 @@ const deleteComment = e => {
     renderComments(storedComments);
 }
 
-window.onload = async () => {
-    initializePage();
+//  5. function to submit/store comments:
+const submitComment = e => {
+    e.preventDefault();
+    const commentForm = document.querySelector('.comment-form');
+    const formData = new FormData(commentForm);
 
+    const commentText = formData.get("user-comment");
+    commentForm.reset();
+
+    const storedComments = JSON.parse(localStorage.comments);
+    storedComments.push(commentText);
+    localStorage.comments = JSON.stringify(storedComments);
+
+    const comment = createComment(commentText, storedComments.length - 1);
+
+    const comments = document.querySelector(".comments");
+    comments.appendChild(comment);
+};
+
+
+// 6. function to store votes:
+const vote = e => {
+    if (e.target.id === "upvote") {
+        localStorage.score = parseInt(localStorage.score) + 1;
+    } else {
+        localStorage.score = parseInt(localStorage.score) - 1;
+    }
+    document.querySelector('.score').innerHTML = localStorage.score;
+}
+
+
+
+window.onload = async () => {    // activate page main function and EventListeners!
+
+    initializePage(); // main flow of the page
+
+    // activate all EventListeners!
     document.getElementById("new-pic").addEventListener("click", fetchImage);
     document.getElementById("upvote").addEventListener("click", e => vote(e));
     document.getElementById("downvote").addEventListener("click", e => vote(e));
     document.getElementById("submit-comment").addEventListener("click", e => submitComment(e));
-}
+};
